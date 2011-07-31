@@ -280,9 +280,11 @@ void wxSkinFrameBase::OnLeftUp(wxMouseEvent& evt)
 
 void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
 {
+    bool dragFlag = evt.Dragging();
+    bool leftIsDown = evt.LeftIsDown();
 	int w,h;
 	GetClientSize(&w,&h);
-
+    
 	if(m_bSizeable)
 	{			
 		wxRect rectNWSE(w-10,h-10,10,10);
@@ -292,26 +294,34 @@ void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
 #endif
 		if(rectNWSE.CONTAINS(evt.GetPosition()))
 		{	
+		    CaptureMouse();
 			SetCursor(wxCursor(wxCURSOR_SIZENWSE ));
 		}
 #ifndef __WXMAC__
 		else if(rectWE.CONTAINS(evt.GetPosition()))
 		{	
+		    CaptureMouse();
 			SetCursor(wxCursor(wxCURSOR_SIZEWE ));
 		}
 		else if(rectNS.CONTAINS(evt.GetPosition()))
 		{	
+		    CaptureMouse();
 			SetCursor(wxCursor(wxCURSOR_SIZENS ));
 		}
 #endif
 		else
+		{
 			SetCursor(wxNullCursor);
+			if (!(HasCapture() && dragFlag && leftIsDown))
+		        ReleaseMouse();
+		}
+			
 	}
 
     wxPoint pt = evt.GetPosition();
 	wxPoint pos = ClientToScreen(pt);
 
-    if (HasCapture() && evt.Dragging() && evt.LeftIsDown())
+    if (HasCapture() && dragFlag && leftIsDown)
     {
 		if(m_sizeMode == SIZE_BOTH)
 		{	
