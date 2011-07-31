@@ -39,6 +39,13 @@ On Linux and Mac proceed like this.
 	--> after hitting 'g' ccmake will exit
 	--> simple type 'make' and the build process should begin
 	
+	Ubuntu 11.04
+	------
+	We suppose that you install you wxWidgets from software center
+	1. Make a symbol link of /usr/lib/wx/config/gtk2-unicode-release-2.8, put it in /usr/lib/wx. Name it wx-config.in.
+	2. Set WXWIN to /usr/lib/wx, you can execute the command in terminal "export WXWIN=/usr/lib/wx/"
+	3. cmake and make
+	
 The build process will setup three things:
 - the wxSkin library
 - a simple example
