@@ -233,9 +233,10 @@ void wxSkinFrameBase::OnErase(wxEraseEvent& event)
 
 void wxSkinFrameBase::OnLeftDown(wxMouseEvent& evt)
 {
-	if( m_isMovable || rect_title.CONTAINS(evt.GetPosition()))
+    wxPoint msps = evt.GetPosition(); // mouse position
+	if( m_isMovable || rect_title.CONTAINS(msps))
 	{	CaptureMouse();
-		wxPoint pos = ClientToScreen(evt.GetPosition());
+		wxPoint pos = ClientToScreen(msps);
 		wxPoint origin = GetPosition();
 		int dx =  pos.x - origin.x;
 		int dy = pos.y - origin.y;
@@ -245,18 +246,33 @@ void wxSkinFrameBase::OnLeftDown(wxMouseEvent& evt)
 	if(m_bSizeable)
 	{	int w,h;
 		GetClientSize(&w,&h);
-		wxRect rectSize(w-15,h-15,15,15);
+		wxRect rectWN(0, 0, 5, 5);
+		wxRect rectEN(w-5, 0, 5, 5);
+		wxRect rectES(w-5,h-5, 5, 5);
+		wxRect rectWS(0, h-5, 5, 5);
 #ifndef __WXMAC__
-		wxRect rectWE(w-10,0,10,h);
-		wxRect rectNS(0,h-10,w,10);
+        wxRect rectWEST(0, 0, 5, h);
+		wxRect rectEAST(w-5,0,5,h);
+		wxRect rectSOUTH(0,h-5,w,5);
+		wxRect rectNORTH(0, 0, w, 5);
 #endif
-		if(rectSize.CONTAINS(evt.GetPosition()))
-			m_sizeMode = SIZE_BOTH;
+		if(rectWN.CONTAINS(msps))
+			m_sizeMode = SIZE_WN;
+	    else if (rectEN.CONTAINS(msps))
+			m_sizeMode = SIZE_EN;
+	    else if (rectES.CONTAINS(msps))
+			m_sizeMode = SIZE_ES;
+	    else if (rectWS.CONTAINS(msps))
+			m_sizeMode = SIZE_WS;
 #ifndef __WXMAC__
-		else if(rectWE.CONTAINS(evt.GetPosition()))
-			m_sizeMode = SIZE_VERT;
-		else if(rectNS.CONTAINS(evt.GetPosition()))
-			m_sizeMode = SIZE_HOR;
+		else if(rectWEST.CONTAINS(msps))
+			m_sizeMode = SIZE_WEST;
+		else if(rectEAST.CONTAINS(msps))
+			m_sizeMode = SIZE_EAST;
+		else if(rectNORTH.CONTAINS(msps))
+			m_sizeMode = SIZE_NORTH;
+		else if(rectSOUTH.CONTAINS(msps))
+			m_sizeMode = SIZE_SOUTH;
 #endif
 	}
 
@@ -280,6 +296,7 @@ void wxSkinFrameBase::OnLeftUp(wxMouseEvent& evt)
 
 void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
 {
+    wxPoint msps = evt.GetPosition(); // mouse position
     bool dragFlag = evt.Dragging();
     bool leftIsDown = evt.LeftIsDown();
 	int w,h;
@@ -287,23 +304,33 @@ void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
     
 	if(m_bSizeable)
 	{			
-		wxRect rectNWSE(w-10,h-10,10,10);
+		wxRect rectWN(0, 0, 5, 5);
+		wxRect rectEN(w-5, 0, 5, 5);
+		wxRect rectES(w-5,h-5,5,5);
+		wxRect rectWS(0, h-5, 5, 5);
 #ifndef __WXMAC__
-		wxRect rectWE(w-10,0,10,h);
-		wxRect rectNS(0,h-10,w,10);
+        wxRect rectWEST(0, 0, 5, h);
+		wxRect rectEAST(w-5,0,5,h);
+		wxRect rectSOUTH(0,h-5,w,5);
+		wxRect rectNORTH(0, 0, w, 5);
 #endif
-		if(rectNWSE.CONTAINS(evt.GetPosition()))
+		if(rectWN.CONTAINS(msps) || rectES.CONTAINS(msps))
 		{	
 		    CaptureMouse();
 			SetCursor(wxCursor(wxCURSOR_SIZENWSE ));
 		}
+		else if(rectEN.CONTAINS(msps) || rectWS.CONTAINS(msps))
+		{	
+		    CaptureMouse();
+			SetCursor(wxCursor(wxCURSOR_SIZENESW ));
+		}
 #ifndef __WXMAC__
-		else if(rectWE.CONTAINS(evt.GetPosition()))
+		else if(rectWEST.CONTAINS(msps) || rectEAST.CONTAINS(msps))
 		{	
 		    CaptureMouse();
 			SetCursor(wxCursor(wxCURSOR_SIZEWE ));
 		}
-		else if(rectNS.CONTAINS(evt.GetPosition()))
+		else if(rectNORTH.CONTAINS(msps) || rectSOUTH.CONTAINS(msps))
 		{	
 		    CaptureMouse();
 			SetCursor(wxCursor(wxCURSOR_SIZENS ));
@@ -320,26 +347,60 @@ void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
 
     wxPoint pt = evt.GetPosition();
 	wxPoint pos = ClientToScreen(pt);
+	wxPoint orignPos = this->GetPosition();
 
     if (HasCapture() && dragFlag && leftIsDown)
     {
-		if(m_sizeMode == SIZE_BOTH)
+		if(m_sizeMode == SIZE_ES)
 		{	
 			int newX = pt.x;
 			int newY = pt.y;
 			
-			SetSize(newX,newY);
+			SetClientSize(newX,newY);
 			
 		}
-		else if(m_sizeMode == SIZE_VERT)
+		else if(m_sizeMode == SIZE_EAST)
 		{
 			int newX = pt.x;
 			SetClientSize(newX,h);
 		}
-		else if(m_sizeMode == SIZE_HOR)
+		else if(m_sizeMode == SIZE_SOUTH)
 		{
 			int newY = pt.y;
 			SetClientSize(w,newY);
+		}
+		else if(m_sizeMode == SIZE_WEST)
+		{
+			int newW = w + orignPos.x - (pos.x - m_delta.x);
+			SetClientSize(newW, h);
+			Move((pos.x - m_delta.x), orignPos.y);
+		}
+		else if(m_sizeMode == SIZE_NORTH)
+		{
+			int newH = h + orignPos.y - (pos.y - m_delta.y);
+			SetClientSize(w, newH);
+			Move(orignPos.x, (pos.y - m_delta.y));
+		}
+		else if(m_sizeMode == SIZE_EN)
+		{
+			int newW = pt.x;
+			int newH = h + orignPos.y - (pos.y - m_delta.y);
+			SetClientSize(newW, newH);
+			Move(orignPos.x, (pos.y - m_delta.y));
+		}
+		else if(m_sizeMode == SIZE_WS)
+		{
+			int newW = w + orignPos.x - (pos.x - m_delta.x);
+			int newH = pt.y;
+			SetClientSize(newW, newH);
+			Move((pos.x - m_delta.x), orignPos.y);
+		}
+		else if(m_sizeMode == SIZE_WN)
+		{
+			int newW = w + orignPos.x - (pos.x - m_delta.x);
+			int newH = h + orignPos.y - (pos.y - m_delta.y);
+			SetClientSize(newW, newH);
+			Move((pos.x - m_delta.x), (pos.y - m_delta.y));
 		}
 		else
 		{
