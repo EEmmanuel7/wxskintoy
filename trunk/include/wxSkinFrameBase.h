@@ -25,9 +25,15 @@
 #define wxTITLE_MIDDLE	0x20000
 #define wxTITLE_RIGHT	0x40000
 
-#define SIZE_BOTH 1
-#define SIZE_VERT 2
-#define SIZE_HOR 3
+#define SIZE_NORTH 1
+#define SIZE_EN    2
+#define SIZE_EAST  3
+#define SIZE_ES    4
+#define SIZE_SOUTH 5
+#define SIZE_WS    6
+#define SIZE_WEST  7
+#define SIZE_WN    8 
+
 ///Base class for all skinned frames
 /**This class manages skinned frames. Normally you won't have to use it directly. Use one of the frame classes
 (wxSkinSimpleFrame and wxSkinFrame) instead.
