@@ -17,10 +17,11 @@ BEGIN_EVENT_TABLE(wxSkinSlider,wxSkinWindow)
 	EVT_ENTER_WINDOW(wxSkinSlider::OnEnterWindowDummy)
 	EVT_LEAVE_WINDOW(wxSkinSlider::OnLeaveWindow)
 	EVT_MOTION(wxSkinSlider::OnMouseMotion)
+	EVT_LEFT_UP(wxSkinSlider::OnLeftUp)
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS(wxSkinSlider,wxSkinWindow)
-
+ 
 wxSkinSlider::wxSkinSlider()
 	: wxSkinWindow()
 {
@@ -30,17 +31,17 @@ wxSkinSlider::wxSkinSlider()
 
 wxSkinSlider::wxSkinSlider(wxWindow* parent,
  				int id,
+ 				bool type,
  				int max,
    				const wxPoint& pos,
          		const wxSize& size,
            		long style,
 				const wxString& name)
-	:wxSkinWindow(parent,id,pos,size,style,name,TYPE_SLIDER), m_maxvalue(max)
+	:wxSkinWindow(parent,id,pos,size,style,name,TYPE_SLIDER), m_maxvalue(max), m_isvertical(type)
 {
 	m_currentvalue = 0;
 
 	m_bOver = false;
-	m_isvertical = false;	
 }
 
 wxSkinSlider::~wxSkinSlider()
@@ -63,18 +64,34 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 			m_sliderRect.height = bmp_state2.GetHeight();
 		//}
 
-		int w,h;
+		int w, h;
 		GetClientSize(&w,&h);
-		int scale = (int)(((float)w/(float)m_maxvalue)*m_currentvalue);
+		
+		int scale;
+		if (m_isvertical)
+		{
+		    scale = (int)(((float)h/(float)m_maxvalue)*m_currentvalue);
+		    if(scale >= h)
+			    scale = h-bmp_state2.GetHeight();
+		    m_sliderRect.y = scale;
 
-		if(scale >= w)
-			scale = w-bmp_state2.GetWidth();
-		m_sliderRect.x = scale;
-
-		if(m_bOver)
-			dc.DrawBitmap( bmp_over, scale , 0 );
+		    if(m_bOver)
+			    dc.DrawBitmap( bmp_over, 0, scale );
+		    else
+			    dc.DrawBitmap( bmp_state2, 0, scale );
+		}
 		else
-			dc.DrawBitmap( bmp_state2, scale , 0 );
+		{
+		    scale = (int)(((float)w/(float)m_maxvalue)*m_currentvalue);
+		    if(scale >= w)
+			    scale = w-bmp_state2.GetWidth();
+		    m_sliderRect.x = scale;
+
+		    if(m_bOver)
+			    dc.DrawBitmap( bmp_over, scale , 0 );
+		    else
+			    dc.DrawBitmap( bmp_state2, scale , 0 );
+		}
 	}
 
 }
@@ -98,6 +115,17 @@ void wxSkinSlider::SetValue(int value)
 		Refresh();
 	}
 }
+
+bool wxSkinSlider::GetType() const
+{
+    return m_isvertical;
+}
+
+void wxSkinSlider::SetType(bool type)
+{
+    m_isvertical = type;
+}
+
 void wxSkinSlider::OnMouseMotion(wxMouseEvent& event)
 {
 	wxPoint pt = event.GetPosition();
@@ -108,7 +136,17 @@ void wxSkinSlider::OnMouseMotion(wxMouseEvent& event)
 
 		int w,h;
 		GetClientSize(&w,&h);
-		int scale = (int)(((float)m_maxvalue/(float)w)*pt.x);
+		
+		int scale;
+		if (m_isvertical)
+		{
+		    scale = (int)(((float)m_maxvalue/(float)h)*pt.y);
+		}
+		else
+		{
+		    scale = (int)(((float)m_maxvalue/(float)w)*pt.x);
+		}
+		
 		if(scale > m_maxvalue)
 			scale = m_maxvalue;
 		if(scale < 0)
@@ -136,4 +174,12 @@ void wxSkinSlider::OnMouseMotion(wxMouseEvent& event)
 	}
 
 	Refresh();
+}
+
+void wxSkinSlider::OnLeftUp(wxMouseEvent& evt)
+{
+    if (HasCapture())
+    {
+        ReleaseMouse();
+    }
 }
