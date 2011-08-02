@@ -33,6 +33,7 @@ public:
 
 	wxSkinSlider(wxWindow* parent,
  				int id,
+ 				bool type = false,
  				int max=100,
   				const wxPoint& pos = wxDefaultPosition,
          		const wxSize& size = wxDefaultSize,
@@ -51,17 +52,22 @@ public:
 	///Set the current value of the slider
 	void SetValue(int);
 	
+	//Get/Set the type of the slider(vertical or horizontal)
+	bool GetType() const;
+	void SetType(bool type);
+	
 	virtual void DrawCustom(wxDC& dc);
 private:
 	void OnMouseMotion(wxMouseEvent& event);
 	void OnEnterWindowDummy(wxMouseEvent& WXUNUSED(e)){}
-	void OnLeaveWindow(wxMouseEvent& WXUNUSED(e))
+	void OnLeaveWindow(wxMouseEvent& e)
 	{ 
 		m_bOver = false;
-		if(HasCapture())
+		if(HasCapture() && !e.LeftIsDown())
 			ReleaseMouse();
 		Refresh();
 	}
+	void OnLeftUp(wxMouseEvent& evt);
 	DECLARE_DYNAMIC_CLASS(wxSkinSlider)
 	DECLARE_EVENT_TABLE()
 };
