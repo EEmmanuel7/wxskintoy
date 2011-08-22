@@ -56,8 +56,9 @@ wxSize wxSkinSlider::DoGetBestSize() const
 
 void wxSkinSlider::DrawCustom(wxDC& dc)
 {
-	if(bmp_state2.ISOK())
+	if(bmp_state2.ISOK() && bmp_extra.ISOK())
 	{
+	    wxImage bmp_fill(bmp_extra);
 		//if(bmp_state2.Ok())
 		//{
 			m_sliderRect.width = bmp_state2.GetWidth();
@@ -76,9 +77,10 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 		    m_sliderRect.y = scale;
 
 		    if(m_bOver)
-			    dc.DrawBitmap( bmp_over, 0, scale );
+			    dc.DrawBitmap( bmp_over, 0, scale, true);
 		    else
-			    dc.DrawBitmap( bmp_state2, 0, scale );
+			    dc.DrawBitmap( bmp_state2, 0, scale, true);
+	        dc.DrawBitmap(bmp_fill.Resize(wxSize(bmp_extra.GetWidth(), scale), wxPoint(0, 0)), 0, 0, true);
 		}
 		else
 		{
@@ -88,9 +90,10 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 		    m_sliderRect.x = scale;
 
 		    if(m_bOver)
-			    dc.DrawBitmap( bmp_over, scale , 0 );
+			    dc.DrawBitmap( bmp_over, scale , 0, true);
 		    else
-			    dc.DrawBitmap( bmp_state2, scale , 0 );
+			    dc.DrawBitmap( bmp_state2, scale , 0, true);
+	        dc.DrawBitmap(bmp_fill.Resize(wxSize(scale, bmp_extra.GetHeight()), wxPoint(0, 0)), 0, 0, true);
 		}
 	}
 
