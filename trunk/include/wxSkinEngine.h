@@ -115,6 +115,7 @@ typedef struct TAGCONTROL{
 	wxString skinState2;
 	wxString skinOver;
 	wxString skinDisabled;
+	wxString skinExtra;
 }ControlInfo;
 WX_DECLARE_STRING_HASH_MAP( ControlInfo, MapOfControls );
 
