@@ -35,6 +35,7 @@ protected:
 	wxImage bmp_state2;
 	wxImage bmp_over;
 	wxImage bmp_disabled;
+	wxImage bmp_extra;
 	int m_type;
 	bool m_bScaleFill;
 public:
@@ -60,6 +61,8 @@ public:
 	void SetOverSkin(const wxImage& skin = wxNullImage);
 	///Set a skin for disabled state.
 	void SetDisabledSkin(const wxImage& skin = wxNullImage);
+	///Set extra skin(some controls that need more skin).
+	void SetExtraSkin(const wxImage& skin = wxNullImage);
 
 	bool SetShape(const wxRegion& region);
 	bool SetShape(const wxImage& img);
