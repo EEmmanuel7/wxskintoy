@@ -39,7 +39,7 @@ wxSkinCheckBox::wxSkinCheckBox(wxWindow* parent,
 				const wxString& name)
 	:wxSkinWindow(parent,id,pos,size,style,name,TYPE_CHECKBOX)
 {
-	SetScaleFill(false);
+	SetScaleFill(true);
 	m_checked = false;
 
 	wxString tmp_lab = label;
