@@ -363,6 +363,7 @@ void wxSkinEngine::InitializeSkin()
 				win->SetState2Skin(LoadSkinImage(m_skinfile+info.skinState2));
 				win->SetOverSkin(LoadSkinImage(m_skinfile+info.skinOver));
 				win->SetDisabledSkin(LoadSkinImage(m_skinfile+info.skinDisabled));
+				win->SetExtraSkin(LoadSkinImage(m_skinfile+info.skinExtra));
 
 				win->SetSize(info.measure);
 				win->Show(info.shown);
@@ -462,10 +463,13 @@ void wxSkinEngine::GetDefaultSkin(wxSkinWindow* win)
 		win->SetNormalSkin(LoadSkinImage(m_skinfile+info.skinState1));
 		win->SetState2Skin(LoadSkinImage(m_skinfile+info.skinState2));
 		win->SetOverSkin(LoadSkinImage(m_skinfile+info.skinOver));
-		win->SetDisabledSkin(LoadSkinImage(m_skinfile+info.skinDisabled));		
+		win->SetDisabledSkin(LoadSkinImage(m_skinfile+info.skinDisabled));	
+		win->SetExtraSkin(LoadSkinImage(m_skinfile+info.skinExtra));	
 	}
 	else
-	{	win->SetDisabledSkin(wxNullImage);
+	{	
+	    win->SetExtraSkin(wxNullImage);
+	    win->SetDisabledSkin(wxNullImage);
 		win->SetState2Skin(wxNullImage);
 		win->SetOverSkin(wxNullImage);
 		win->SetNormalSkin(wxImage(1,1));
@@ -1123,6 +1127,7 @@ void wxSkinEngine::ParseInnerAttributes(int type,wxXmlNode* node)
 				controlInfo.skinState2 = thisNode->GetPropVal(wxT("slider"),wxT(""));
 				controlInfo.skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
 				controlInfo.skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
+				controlInfo.skinExtra = thisNode->GetPropVal(wxT("fill"), wxT(""));
 			}	
 			break;
 			case TYPE_PANEL:
