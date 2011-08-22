@@ -327,6 +327,7 @@ void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
 #ifndef __WXMAC__
 		else if(rectWEST.CONTAINS(msps) || rectEAST.CONTAINS(msps))
 		{	
+
 		    CaptureMouse();
 			SetCursor(wxCursor(wxCURSOR_SIZEWE ));
 		}
@@ -372,35 +373,40 @@ void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
 		else if(m_sizeMode == SIZE_WEST)
 		{
 			int newW = w + orignPos.x - (pos.x - m_delta.x);
-			SetClientSize(newW, h);
-			Move((pos.x - m_delta.x), orignPos.y);
+			//SetClientSize(newW, h);
+			//Move((pos.x - m_delta.x), orignPos.y);
+			SetSize(wxRect((pos.x - m_delta.x), orignPos.y, newW, h));
 		}
 		else if(m_sizeMode == SIZE_NORTH)
 		{
 			int newH = h + orignPos.y - (pos.y - m_delta.y);
-			SetClientSize(w, newH);
-			Move(orignPos.x, (pos.y - m_delta.y));
+			//SetClientSize(w, newH);
+			//Move(orignPos.x, (pos.y - m_delta.y));
+			SetSize(wxRect(orignPos.x, (pos.y - m_delta.y), w, newH));			
 		}
 		else if(m_sizeMode == SIZE_EN)
 		{
 			int newW = pt.x;
 			int newH = h + orignPos.y - (pos.y - m_delta.y);
-			SetClientSize(newW, newH);
-			Move(orignPos.x, (pos.y - m_delta.y));
+			//SetClientSize(newW, newH);
+			//Move(orignPos.x, (pos.y - m_delta.y));
+			SetSize(wxRect(orignPos.x, (pos.y - m_delta.y), newW, newH));			
 		}
 		else if(m_sizeMode == SIZE_WS)
 		{
 			int newW = w + orignPos.x - (pos.x - m_delta.x);
 			int newH = pt.y;
-			SetClientSize(newW, newH);
-			Move((pos.x - m_delta.x), orignPos.y);
+			//SetClientSize(newW, newH);
+			//Move((pos.x - m_delta.x), orignPos.y);
+			SetSize(wxRect((pos.x - m_delta.x), orignPos.y, newW, newH));
 		}
 		else if(m_sizeMode == SIZE_WN)
 		{
 			int newW = w + orignPos.x - (pos.x - m_delta.x);
 			int newH = h + orignPos.y - (pos.y - m_delta.y);
-			SetClientSize(newW, newH);
-			Move((pos.x - m_delta.x), (pos.y - m_delta.y));
+			//SetClientSize(newW, newH);
+			//Move((pos.x - m_delta.x), (pos.y - m_delta.y));
+			SetSize(wxRect((pos.x - m_delta.x), (pos.y - m_delta.y), newW, newH));
 		}
 		else
 		{
