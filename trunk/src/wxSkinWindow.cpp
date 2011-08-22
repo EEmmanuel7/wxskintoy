@@ -59,6 +59,10 @@ void wxSkinWindow::SetDisabledSkin(const wxImage& skin)
 { 
 	bmp_disabled = skin; 
 }
+void wxSkinWindow::SetExtraSkin(const wxImage& skin)
+{
+    bmp_extra = skin;
+}
 bool wxSkinWindow::SetShape(const wxImage& imgorg)
 {
 	wxImage img = imgorg;
