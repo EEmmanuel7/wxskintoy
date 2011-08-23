@@ -72,8 +72,9 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 		if (m_isvertical)
 		{
 		    scale = (int)(((float)h/(float)m_maxvalue)*m_currentvalue);
-		    if(scale >= h)
-			    scale = h-bmp_state2.GetHeight();
+		    int maxScale = h-bmp_state2.GetHeight();
+		    if(scale > maxScale)
+			    scale = maxScale;
 		    m_sliderRect.y = scale;
 
 		    if(m_bOver)
@@ -85,8 +86,9 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 		else
 		{
 		    scale = (int)(((float)w/(float)m_maxvalue)*m_currentvalue);
-		    if(scale >= w)
-			    scale = w-bmp_state2.GetWidth();
+		    int maxScale = w-bmp_state2.GetWidth();
+		    if(scale > maxScale)
+			    scale = maxScale;
 		    m_sliderRect.x = scale;
 
 		    if(m_bOver)
