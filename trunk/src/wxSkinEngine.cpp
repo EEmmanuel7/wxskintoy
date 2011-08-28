@@ -15,7 +15,9 @@
 #include "wxSkinSimpleFrame.h"
 #include "wxSkinFrame.h"
 #include "wxSkinButton.h"
+#include "wxSkinStaticText.h"
 #include "wxSkinWindow.h"
+#include "wxSkinSplitterWindow.h"
 
 //ifdef this
 #include "guibuilder.h"
@@ -62,6 +64,12 @@ wxSkinEngine* wxSkinEngine::Get()
 void wxSkinEngine::ClearSkin()
 {
 	m_skinfile.Empty();
+	for(MapOfControls::iterator itControls = m_controlMap.begin();
+		itControls != m_controlMap.end(); ++itControls)
+	{
+    	ControlInfo *info = itControls->second;
+		delete info;
+	}
 	m_controlMap.clear();
 	m_frameSimpleMap.clear();
 	m_frameComplexMap.clear();
@@ -163,25 +171,25 @@ void wxSkinEngine::InitializeSkin()
 					wasShown = true;
 				}
 				
-				frame->SetSkin(LoadSkinImage(m_skinfile+info.skinFile));
+				frame->SetSkin(LoadSkinImage(info.skinFile));
 				
 				frame->SetMovable(info.movable);
 				frame->SetClientArea(info.clientarea);
 
 				////////CLOSEBOX
-				frame->SetClose(info.closebox,LoadSkinImage(m_skinfile+info.skin_closebox));
-				frame->SetCloseOver(LoadSkinImage(m_skinfile+info.skin_closebox_over));
-				frame->SetClosePressed(LoadSkinImage(m_skinfile+info.skin_closebox_press));
+				frame->SetClose(info.closebox,LoadSkinImage(info.skin_closebox));
+				frame->SetCloseOver(LoadSkinImage(info.skin_closebox_over));
+				frame->SetClosePressed(LoadSkinImage(info.skin_closebox_press));
 				////////////////
 				////////MINIMIZEBOX
-				frame->SetMinimize(info.minimizebox,LoadSkinImage(m_skinfile+info.skin_minimizebox));
-				frame->SetMinimizeOver(LoadSkinImage(m_skinfile+info.skin_minimizebox_over));
-				frame->SetMinimizePressed(LoadSkinImage(m_skinfile+info.skin_minimizebox_press));
+				frame->SetMinimize(info.minimizebox,LoadSkinImage(info.skin_minimizebox));
+				frame->SetMinimizeOver(LoadSkinImage(info.skin_minimizebox_over));
+				frame->SetMinimizePressed(LoadSkinImage(info.skin_minimizebox_press));
 				////////////////
 				////////MAXIMIZEBOX
-				frame->SetMaximize(info.minimizebox,LoadSkinImage(m_skinfile+info.skin_maximizebox));
-				frame->SetMaximizeOver(LoadSkinImage(m_skinfile+info.skin_maximizebox_over));
-				frame->SetMaximizePressed(LoadSkinImage(m_skinfile+info.skin_maximizebox_press));
+				frame->SetMaximize(info.minimizebox,LoadSkinImage(info.skin_maximizebox));
+				frame->SetMaximizeOver(LoadSkinImage(info.skin_maximizebox_over));
+				frame->SetMaximizePressed(LoadSkinImage(info.skin_maximizebox_press));
 				////////////////
 
 				frame->SetTitleRect(info.titlebar);
@@ -252,48 +260,48 @@ void wxSkinEngine::InitializeSkin()
 
 				int initWidth = 0, initHeight = 0;
 
-				wxImage img = LoadSkinImage(m_skinfile+info.skin_top);
+				wxImage img = LoadSkinImage(info.skin_top);
 				initWidth += img.GetWidth();
 				frame->SetTopSkin(img);
 
-				img = LoadSkinImage(m_skinfile+info.skin_topleft);
+				img = LoadSkinImage(info.skin_topleft);
 				initWidth += img.GetWidth();
 				initHeight += img.GetHeight();
 				frame->SetTopLeftSkin(img);
 
-				img = LoadSkinImage(m_skinfile+info.skin_topright);
+				img = LoadSkinImage(info.skin_topright);
 				initWidth += img.GetWidth();
 				frame->SetTopRightSkin(img);
 
-				img = LoadSkinImage(m_skinfile+info.skin_bottom);
+				img = LoadSkinImage(info.skin_bottom);
 				initHeight += img.GetHeight();
 				frame->SetBottomSkin(img);
 
-				frame->SetBottomLeftSkin(LoadSkinImage(m_skinfile+info.skin_bottomleft));
-				frame->SetBottomRightSkin(LoadSkinImage(m_skinfile+info.skin_bottomright));
+				frame->SetBottomLeftSkin(LoadSkinImage(info.skin_bottomleft));
+				frame->SetBottomRightSkin(LoadSkinImage(info.skin_bottomright));
 
-				img = LoadSkinImage(m_skinfile+info.skin_left);
+				img = LoadSkinImage(info.skin_left);
 				initHeight += img.GetHeight();
 				frame->SetLeftSkin(img);
 
-				frame->SetRightSkin(LoadSkinImage(m_skinfile+info.skin_right));
-				frame->SetBodySkin(LoadSkinImage(m_skinfile+info.skin_body));
+				frame->SetRightSkin(LoadSkinImage(info.skin_right));
+				frame->SetBodySkin(LoadSkinImage(info.skin_body));
 
 				frame->SetMovable(info.movable);
 				////////CLOSEBOX
-				frame->SetClose(info.closebox,LoadSkinImage(m_skinfile+info.skin_closebox));
-				frame->SetCloseOver(LoadSkinImage(m_skinfile+info.skin_closebox_over));
-				frame->SetClosePressed(LoadSkinImage(m_skinfile+info.skin_closebox_press));
+				frame->SetClose(info.closebox,LoadSkinImage(info.skin_closebox));
+				frame->SetCloseOver(LoadSkinImage(info.skin_closebox_over));
+				frame->SetClosePressed(LoadSkinImage(info.skin_closebox_press));
 				////////////////
 				////////MINIMIZEBOX
-				frame->SetMinimize(info.minimizebox,LoadSkinImage(m_skinfile+info.skin_minimizebox));
-				frame->SetMinimizeOver(LoadSkinImage(m_skinfile+info.skin_minimizebox_over));
-				frame->SetMinimizePressed(LoadSkinImage(m_skinfile+info.skin_minimizebox_press));
+				frame->SetMinimize(info.minimizebox,LoadSkinImage(info.skin_minimizebox));
+				frame->SetMinimizeOver(LoadSkinImage(info.skin_minimizebox_over));
+				frame->SetMinimizePressed(LoadSkinImage(info.skin_minimizebox_press));
 				////////////////
 				////////MAXIMIZEBOX
-				frame->SetMaximize(info.minimizebox,LoadSkinImage(m_skinfile+info.skin_maximizebox));
-				frame->SetMaximizeOver(LoadSkinImage(m_skinfile+info.skin_maximizebox_over));
-				frame->SetMaximizePressed(LoadSkinImage(m_skinfile+info.skin_maximizebox_press));
+				frame->SetMaximize(info.minimizebox,LoadSkinImage(info.skin_maximizebox));
+				frame->SetMaximizeOver(LoadSkinImage(info.skin_maximizebox_over));
+				frame->SetMaximizePressed(LoadSkinImage(info.skin_maximizebox_press));
 				////////////////		
 
 				frame->SetCloseBoxRelation(info.closebox_relateto);
@@ -353,20 +361,29 @@ void wxSkinEngine::InitializeSkin()
 		MapOfControls::iterator itControl = m_controlMap.find(label);
 		if(itControl != m_controlMap.end())
 		{
-			ControlInfo info = itControl->second;
+			ControlInfo *info = itControl->second;
 			wxSkinWindow* win = wxDynamicCast(itAssigned->second,wxSkinWindow);
 			if(win)
-			{	
+			{
 				wxLogNull nullLog;
-
-				win->SetNormalSkin(LoadSkinImage(m_skinfile+info.skinState1));
-				win->SetState2Skin(LoadSkinImage(m_skinfile+info.skinState2));
-				win->SetOverSkin(LoadSkinImage(m_skinfile+info.skinOver));
-				win->SetDisabledSkin(LoadSkinImage(m_skinfile+info.skinDisabled));
-				win->SetExtraSkin(LoadSkinImage(m_skinfile+info.skinExtra));
-
-				win->SetSize(info.measure);
-				win->Show(info.shown);
+                win->SetSkin(info);
+                continue;
+			}
+			
+			wxSkinStaticText *win1 = wxDynamicCast(itAssigned->second,wxSkinStaticText);
+			if (win1) 
+			{
+			    wxLogNull nullLog;
+                win1->SetSkin(info);
+                continue;
+			}
+			
+			wxSkinSplitterWindow *win2 = wxDynamicCast(itAssigned->second,wxSkinSplitterWindow);
+			if (win2) 
+			{
+			    wxLogNull nullLog;
+                win2->SetSkin(info);
+                continue;
 			}
 			continue;
 		}
@@ -396,7 +413,7 @@ void wxSkinEngine::InitializeSkin()
 wxImage wxSkinEngine::LoadSkinImage(const wxString& file)
 {
 	wxFileSystem system;
-	wxFSFile* thefile = system.OpenFile(file);
+	wxFSFile* thefile = system.OpenFile(m_skinfile+file);
 	if(thefile)
 	{	wxImage img(*thefile->GetStream(),wxBITMAP_TYPE_ANY);
 		delete thefile;
@@ -450,29 +467,30 @@ void wxSkinEngine::GetDefaultSkin(wxSkinWindow* win)
 			nodeName.Append(wxT("PANEL"));
 		}
 		break;
+		case TYPE_STATICTEXT:
+		{	
+			nodeName.Append(wxT("STATICTEXT"));
+		}
+		break;
+		case TYPE_SPLITTERWINDOW:
+		{	
+			nodeName.Append(wxT("SPLITTERWINDOW"));
+		}
+		break;
 	}
 
 	MapOfControls::iterator itControl = m_controlMap.find(nodeName);
 
 	if(itControl != m_controlMap.end())
 	{
-		ControlInfo info = itControl->second;
+		ControlInfo* info = itControl->second;
 
 		wxLogNull nullLog;
-
-		win->SetNormalSkin(LoadSkinImage(m_skinfile+info.skinState1));
-		win->SetState2Skin(LoadSkinImage(m_skinfile+info.skinState2));
-		win->SetOverSkin(LoadSkinImage(m_skinfile+info.skinOver));
-		win->SetDisabledSkin(LoadSkinImage(m_skinfile+info.skinDisabled));	
-		win->SetExtraSkin(LoadSkinImage(m_skinfile+info.skinExtra));	
+        win->SetSkin(info);
 	}
 	else
 	{	
-	    win->SetExtraSkin(wxNullImage);
-	    win->SetDisabledSkin(wxNullImage);
-		win->SetState2Skin(wxNullImage);
-		win->SetOverSkin(wxNullImage);
-		win->SetNormalSkin(wxImage(1,1));
+        win->SetSkin(NULL);
 	}
 }
 bool wxSkinEngine::LoadInfo(const wxString& file,wxString& name, wxString& author, wxString& comment, wxString& application, wxString& custInfo, wxImage& screenshot)
@@ -628,6 +646,10 @@ bool wxSkinEngine::Load(const wxString& file)
 				ParseInnerAttributes(TYPE_SLIDER,node);
 			else if( nodeName == wxT("Panels") )
 				ParseInnerAttributes(TYPE_PANEL,node);
+			else if( nodeName == wxT("StaticTexts") )
+				ParseInnerAttributes(TYPE_STATICTEXT,node);
+			else if( nodeName == wxT("SplitterWindows") )
+				ParseInnerAttributes(TYPE_SPLITTERWINDOW,node);
 			else if( nodeName == wxT("Widgets") )
 			{	
 				wxXmlNode* thisNode = node->GetChildren();
@@ -1002,6 +1024,7 @@ void wxSkinEngine::ParseFrameAttributes(wxXmlNode* node)
 	m_frameComplexMap[frameName] = frameInfo;
 
 }
+
 void wxSkinEngine::ParseInnerAttributes(int type,wxXmlNode* node)
 {
 	if(node == NULL )
@@ -1051,6 +1074,15 @@ void wxSkinEngine::ParseInnerAttributes(int type,wxXmlNode* node)
 					nodeName.Append(wxT("PANEL"));
 				}
 				break;
+				case TYPE_STATICTEXT:
+				{	
+					nodeName.Append(wxT("STATICTEXT"));
+				}
+				case TYPE_SPLITTERWINDOW:
+				{	
+					nodeName.Append(wxT("SPLITTERWINDOW"));
+				}
+				break;
 			}
 		}
 
@@ -1062,82 +1094,164 @@ void wxSkinEngine::ParseInnerAttributes(int type,wxXmlNode* node)
 			continue;
 		}
 
-		ControlInfo controlInfo;
-		controlInfo.measure.x = controlInfo.measure.y = -1;
-		controlInfo.measure.width = controlInfo.measure.height = -1;
-		controlInfo.type = type;
-
-		controlInfo.shown = true;
-		wxString shown = thisNode->GetPropVal(wxT("shown"),wxT("true"));
-		if(shown == wxT("false"))
-			controlInfo.shown = false;
-
-
-		if(!nodeName.StartsWith(wxT("default")))
-		{	wxStringTokenizer tkz(thisNode->GetPropVal(wxT("pos"),wxT("")),wxT(","));
-			if(tkz.HasMoreTokens())
-			{	tkz.GetNextToken().ToLong((long*)&controlInfo.measure.x);
-				tkz.GetNextToken().ToLong((long*)&controlInfo.measure.y);
-			}
-			wxStringTokenizer tkzsize(thisNode->GetPropVal(wxT("size"),wxT("")),wxT(","));
-			if(tkzsize.HasMoreTokens())
-			{	tkzsize.GetNextToken().ToLong((long*)&controlInfo.measure.width);
-				tkzsize.GetNextToken().ToLong((long*)&controlInfo.measure.height);
-			}
-		}
-
+        ControlInfo *controlInfo;
+        
 		switch(type)
 		{
 			case TYPE_BUTTON:
 			{	
-				controlInfo.skinState1 = thisNode->GetPropVal(wxT("normal"),wxT(""));
-				controlInfo.skinState2 = thisNode->GetPropVal(wxT("pressed"),wxT(""));
-				controlInfo.skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
-				controlInfo.skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
+			    controlInfo = new ControlInfo();
+				controlInfo->skinState1 = thisNode->GetPropVal(wxT("normal"),wxT(""));
+				controlInfo->skinState2 = thisNode->GetPropVal(wxT("pressed"),wxT(""));
+				controlInfo->skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
+				controlInfo->skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
 				int i=0;
 			}	
 			break;
 			case TYPE_CHECKBOX:
 			{	
-				controlInfo.skinState1 = thisNode->GetPropVal(wxT("normal"),wxT(""));
-				controlInfo.skinState2 = thisNode->GetPropVal(wxT("checked"),wxT(""));
-				controlInfo.skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
-				controlInfo.skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
+			    controlInfo = new ControlInfo();
+				controlInfo->skinState1 = thisNode->GetPropVal(wxT("normal"),wxT(""));
+				controlInfo->skinState2 = thisNode->GetPropVal(wxT("checked"),wxT(""));
+				controlInfo->skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
+				controlInfo->skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
 				
 			}	
 			break;
 			case TYPE_RADIOBUTTON:
-			{	controlInfo.skinState1 = thisNode->GetPropVal(wxT("normal"),wxT(""));
-				controlInfo.skinState2 = thisNode->GetPropVal(wxT("checked"),wxT(""));
-				controlInfo.skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
-				controlInfo.skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
+			{	
+			    controlInfo = new ControlInfo();
+			    controlInfo->skinState1 = thisNode->GetPropVal(wxT("normal"),wxT(""));
+				controlInfo->skinState2 = thisNode->GetPropVal(wxT("checked"),wxT(""));
+				controlInfo->skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
+				controlInfo->skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
 				
 			}	
 			break;
 			case TYPE_GAUGE:
 			{	
-				controlInfo.skinState1 = thisNode->GetPropVal(wxT("foreground"),wxT(""));
-				controlInfo.skinState2 = thisNode->GetPropVal(wxT("background"),wxT(""));
-				controlInfo.skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
+			    controlInfo = new ControlInfo();
+				controlInfo->skinState1 = thisNode->GetPropVal(wxT("foreground"),wxT(""));
+				controlInfo->skinState2 = thisNode->GetPropVal(wxT("background"),wxT(""));
+				controlInfo->skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
 			}	
 			break;
 			case TYPE_SLIDER:
 			{	
-				controlInfo.skinState1 = thisNode->GetPropVal(wxT("background"),wxT(""));
-				controlInfo.skinState2 = thisNode->GetPropVal(wxT("slider"),wxT(""));
-				controlInfo.skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
-				controlInfo.skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
-				controlInfo.skinExtra = thisNode->GetPropVal(wxT("fill"), wxT(""));
+			    controlInfo = new SliderControlInfo();
+				controlInfo->skinState1 = thisNode->GetPropVal(wxT("background"),wxT(""));
+				controlInfo->skinState2 = thisNode->GetPropVal(wxT("slider"),wxT(""));
+				controlInfo->skinOver = thisNode->GetPropVal(wxT("over"),wxT(""));
+				controlInfo->skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
+				((SliderControlInfo*)controlInfo)->skinFill = thisNode->GetPropVal(wxT("fill"), wxT(""));
+				((SliderControlInfo*)controlInfo)->isVertical = false;
+		        wxString isVertical = thisNode->GetPropVal(wxT("isVertical"),wxT("false"));
+		        if(isVertical == wxT("true"))
+			        ((SliderControlInfo*)controlInfo)->isVertical = true;
 			}	
 			break;
 			case TYPE_PANEL:
 			{	
-				controlInfo.skinState1 = thisNode->GetPropVal(wxT("background"),wxT(""));
-				controlInfo.skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
+			    ControlInfo* controlInfo = new ControlInfo();
+				controlInfo->skinState1 = thisNode->GetPropVal(wxT("background"),wxT(""));
+				controlInfo->skinDisabled = thisNode->GetPropVal(wxT("disabled"),wxT(""));
+			}
+			break;
+			case TYPE_STATICTEXT:
+			{	
+			    StaticTextControlInfo* info = new StaticTextControlInfo();
+			    controlInfo = info;
+			    
+			    info->underlined = false;
+			    wxString underlined = thisNode->GetPropVal(wxT("underlined"),wxT("false"));
+			    if (underlined == wxT("true"))
+			        info->underlined = true;
+			        
+			    info->weight = wxFONTWEIGHT_NORMAL;
+			    wxString weight = thisNode->GetPropVal(wxT("weight"),wxT("normal"));
+			    if (weight == wxT("light"))
+			        info->weight = wxFONTWEIGHT_LIGHT;
+			    else if (weight == wxT("bold"))
+			        info->weight = wxFONTWEIGHT_BOLD;
+			        
+			    info->style = wxFONTSTYLE_NORMAL;
+			    wxString style = thisNode->GetPropVal(wxT("style"),wxT("normal"));
+			    if (style == wxT("slant"))
+			        info->style = wxFONTSTYLE_SLANT;
+			    else if (style == wxT("italic"))
+			        info->style = wxFONTSTYLE_ITALIC;
+			        
+			    info->faceName = thisNode->GetPropVal(wxT("faceName"),wxT(""));
+			    
+			    info->fontFamily = wxFONTFAMILY_DEFAULT;
+			    wxString fontFamily = thisNode->GetPropVal(wxT("fontFamily"),wxT("sans-serif"));
+			    if (fontFamily == wxT("decorative"))
+			        info->fontFamily = wxFONTFAMILY_DECORATIVE;
+			    else if (fontFamily == wxT("formal-serif"))
+			        info->fontFamily = wxFONTFAMILY_ROMAN;
+			    else if (fontFamily == wxT("handwriting"))
+			        info->fontFamily = wxFONTFAMILY_SCRIPT;
+			    else if (fontFamily == wxT("sans-serif"))
+			        info->fontFamily = wxFONTFAMILY_SWISS;
+			    else if (fontFamily == wxT("fixed-pitch"))
+			        info->fontFamily = wxFONTFAMILY_MODERN;
+			    else if (fontFamily == wxT("teletype"))
+			        info->fontFamily = wxFONTFAMILY_TELETYPE;
+	            
+	            int fontSize = 10;
+	            thisNode->GetPropVal(wxT("fontSize"),wxT("10")).ToLong((long*)&fontSize);
+	            info->fontSize = fontSize;
+	            info->colour.Set(thisNode->GetPropVal(wxT("colour"),wxT("#FFFFFF")));
+
+			}
+			break;
+			case TYPE_SPLITTERWINDOW:
+			{	
+			    SplitterWindowControlInfo* info = new SplitterWindowControlInfo();
+			    controlInfo = info;
+			    
+				controlInfo->skinState1 = thisNode->GetPropVal(wxT("btn_left_normal"),wxT(""));
+				controlInfo->skinState2 = thisNode->GetPropVal(wxT("btn_left_pressed"),wxT(""));				
+				controlInfo->skinOver = thisNode->GetPropVal(wxT("btn_left_over"),wxT(""));				
+				
+				controlInfo->skinDisabled = thisNode->GetPropVal(wxT("sash"),wxT(""));
+				
+				info->skinExtra1 = thisNode->GetPropVal(wxT("btn_right_normal"),wxT(""));
+				info->skinExtra2 = thisNode->GetPropVal(wxT("btn_right_pressed"),wxT(""));				
+				info->skinExtra3 = thisNode->GetPropVal(wxT("btn_right_over"),wxT(""));	
+			    
+    	        info->direct = true;
+			    wxString direct = thisNode->GetPropVal(wxT("direct"),wxT("true"));
+			    if (direct == wxT("false"))
+			        info->direct = false;
 			}
 			break;
 		}
 		
+
+		
+		controlInfo->measure.x = controlInfo->measure.y = -1;
+		controlInfo->measure.width = controlInfo->measure.height = -1;
+
+		controlInfo->shown = true;
+		wxString shown = thisNode->GetPropVal(wxT("shown"),wxT("true"));
+		if(shown == wxT("false"))
+			controlInfo->shown = false;
+
+
+		if(!nodeName.StartsWith(wxT("default")))
+		{	wxStringTokenizer tkz(thisNode->GetPropVal(wxT("pos"),wxT("")),wxT(","));
+			if(tkz.HasMoreTokens())
+			{	tkz.GetNextToken().ToLong((long*)&controlInfo->measure.x);
+				tkz.GetNextToken().ToLong((long*)&controlInfo->measure.y);
+			}
+			wxStringTokenizer tkzsize(thisNode->GetPropVal(wxT("size"),wxT("")),wxT(","));
+			if(tkzsize.HasMoreTokens())
+			{	tkzsize.GetNextToken().ToLong((long*)&controlInfo->measure.width);
+				tkzsize.GetNextToken().ToLong((long*)&controlInfo->measure.height);
+			}
+		}
+
 		m_controlMap[nodeName] = controlInfo;
 
 		thisNode = thisNode->GetNext();

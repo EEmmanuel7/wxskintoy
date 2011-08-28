@@ -17,6 +17,7 @@ BEGIN_EVENT_TABLE(wxSkinSlider,wxSkinWindow)
 	EVT_ENTER_WINDOW(wxSkinSlider::OnEnterWindowDummy)
 	EVT_LEAVE_WINDOW(wxSkinSlider::OnLeaveWindow)
 	EVT_MOTION(wxSkinSlider::OnMouseMotion)
+	EVT_LEFT_DOWN(wxSkinSlider::OnLeftDown)
 	EVT_LEFT_UP(wxSkinSlider::OnLeftUp)
 END_EVENT_TABLE()
 
@@ -31,16 +32,15 @@ wxSkinSlider::wxSkinSlider()
 
 wxSkinSlider::wxSkinSlider(wxWindow* parent,
  				int id,
- 				bool type,
  				int max,
    				const wxPoint& pos,
          		const wxSize& size,
            		long style,
 				const wxString& name)
-	:wxSkinWindow(parent,id,pos,size,style,name,TYPE_SLIDER), m_maxvalue(max), m_isvertical(type)
+	:wxSkinWindow(parent,id,pos,size,style,name,TYPE_SLIDER), m_maxvalue(max)
 {
 	m_currentvalue = 0;
-
+    m_isvertical = false;
 	m_bOver = false;
 }
 
@@ -56,9 +56,12 @@ wxSize wxSkinSlider::DoGetBestSize() const
 
 void wxSkinSlider::DrawCustom(wxDC& dc)
 {
-	if(bmp_state2.ISOK() && bmp_extra.ISOK())
+    if (bmp_normal.ISOK())
+        dc.DrawBitmap(bmp_normal,0,0,true);
+
+	if(bmp_state2.ISOK())
 	{
-	    wxImage bmp_fill(bmp_extra);
+	    wxImage bmp_fill(bmp_fill_orign);
 		//if(bmp_state2.Ok())
 		//{
 			m_sliderRect.width = bmp_state2.GetWidth();
@@ -70,7 +73,7 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 		
 		int scale;
 		if (m_isvertical)
-		{
+		{printf("ok\n");
 		    scale = (int)(((float)h/(float)m_maxvalue)*m_currentvalue);
 		    int maxScale = h-bmp_state2.GetHeight();
 		    if(scale > maxScale)
@@ -81,7 +84,12 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 			    dc.DrawBitmap( bmp_over, 0, scale, true);
 		    else
 			    dc.DrawBitmap( bmp_state2, 0, scale, true);
-	        dc.DrawBitmap(bmp_fill.Resize(wxSize(bmp_extra.GetWidth(), scale), wxPoint(0, 0)), 0, 0, true);
+			if (bmp_fill_orign.ISOK())
+			{
+			    int fill_w = bmp_fill_orign.GetWidth();
+			    int offset = (w - fill_w) / 2;
+	            dc.DrawBitmap(bmp_fill.Resize(wxSize(fill_w, scale), wxPoint(0, 0)), offset, 0, true);
+	        }
 		}
 		else
 		{
@@ -95,11 +103,23 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 			    dc.DrawBitmap( bmp_over, scale , 0, true);
 		    else
 			    dc.DrawBitmap( bmp_state2, scale , 0, true);
-	        dc.DrawBitmap(bmp_fill.Resize(wxSize(scale, bmp_extra.GetHeight()), wxPoint(0, 0)), 0, 0, true);
+			if (bmp_fill_orign.ISOK())
+			{
+			    int fill_h = bmp_fill_orign.GetHeight();
+			    int offset = (h - fill_h) / 2;
+	            dc.DrawBitmap(bmp_fill.Resize(wxSize(scale, fill_h), wxPoint(0, 0)), 0, offset, true);
+	        }
 		}
 	}
 
 }
+
+void wxSkinSlider::SetCustomSkin(const ControlInfo* info)
+{
+    bmp_fill_orign = wxSkinEngine::Get()->LoadSkinImage(((SliderControlInfo*)info)->skinFill);
+    m_isvertical = ((SliderControlInfo*)info)->isVertical;
+}
+
 int wxSkinSlider::GetRange() const
 {
 	return m_maxvalue;
@@ -129,6 +149,40 @@ bool wxSkinSlider::GetType() const
 void wxSkinSlider::SetType(bool type)
 {
     m_isvertical = type;
+}
+
+void wxSkinSlider::OnLeftDown(wxMouseEvent& event)
+{
+	wxPoint pt = event.GetPosition();
+
+	m_bOver = true;
+
+	int w,h;
+	GetClientSize(&w,&h);
+	
+	int scale;
+	if (m_isvertical)
+	{
+	    scale = (int)(((float)m_maxvalue/(float)h)*pt.y);
+	}
+	else
+	{
+	    scale = (int)(((float)m_maxvalue/(float)w)*pt.x);
+	}
+	
+	if(scale > m_maxvalue)
+		scale = m_maxvalue;
+	if(scale < 0)
+		scale = 0;
+
+	m_currentvalue = scale;
+
+	wxCommandEvent evt(wxEVT_COMMAND_SLIDER_UPDATED,GetId());
+	evt.SetInt(m_currentvalue);
+	evt.SetEventObject(this);
+	GetEventHandler()->ProcessEvent(evt);
+
+	Refresh();
 }
 
 void wxSkinSlider::OnMouseMotion(wxMouseEvent& event)

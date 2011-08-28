@@ -227,6 +227,20 @@ void wxSkinFrameBase::SetMaximizePressed(const wxImage& img)
 	}
 }
 
+#if defined(__WXGTK__)
+#include <gtk/gtk.h>
+bool wxSkinFrameBase::SetTransparent(wxByte alpha)
+{
+    if (!m_widget)
+        return false;
+    float trans = (float)alpha / 255.0;
+    gtk_window_set_opacity(GTK_WINDOW(m_widget), trans);
+
+    return true;
+
+}
+#endif
+
 void wxSkinFrameBase::OnErase(wxEraseEvent& event)
 {	
 }
@@ -327,6 +341,8 @@ void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
 #ifndef __WXMAC__
 		else if(rectWEST.CONTAINS(msps) || rectEAST.CONTAINS(msps))
 		{	
+
+
 
 		    CaptureMouse();
 			SetCursor(wxCursor(wxCURSOR_SIZEWE ));
