@@ -45,6 +45,7 @@ public:
 	///Sets an optional text label.
 	void SetLabel(const wxString& label);
 	virtual void DrawCustom(wxDC& dc);
+	virtual void SetCustomSkin(const ControlInfo* info){}
 
 	void OnCheck();
 	

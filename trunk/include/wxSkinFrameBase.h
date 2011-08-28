@@ -96,6 +96,10 @@ public:
 	void SetMaximizeOver(const wxImage& img = wxNullImage);
 	///Set the image for the maximizebox in pressed state
 	void SetMaximizePressed(const wxImage& img = wxNullImage);
+	
+#if defined(__WXGTK__)
+    virtual bool SetTransparent(wxByte alpha);
+#endif
 
 protected:
 	void SetWindowShape(wxImage& img);

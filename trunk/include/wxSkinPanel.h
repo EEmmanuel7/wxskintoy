@@ -38,12 +38,13 @@ public:
 	///Set the image to used for skinning and shaping the panel.
 	void SetBackground(const wxImage& img);
 	virtual void DrawCustom(wxDC& dc);
+	virtual void SetCustomSkin(const ControlInfo* info){}
 protected:
 	
 	virtual wxSize DoGetBestSize() const;
 
 private:
-		
+
 	DECLARE_DYNAMIC_CLASS(wxSkinPanel);
 
 };
