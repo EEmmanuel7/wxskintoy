@@ -79,6 +79,8 @@ SET(LIB_SRCS src/wxSkinButton.cpp
 	 include/wxSkinWindow.h
 	 src/guibuilder.cpp
 	 include/guibuilder.h
+	 src/wxSkinSplitterWindow.cpp
+	 include/wxSkinSplitterWindow.h
           )
 
 SET(SRCS_NORMAL example/main.cpp)
