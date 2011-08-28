@@ -42,6 +42,7 @@ public:
 	void SetLabel(const wxString& label);
 	
 	virtual void DrawCustom(wxDC& dc);
+	virtual void SetCustomSkin(const ControlInfo* info){}
 protected:
 	virtual wxSize DoGetBestSize() const;
 

@@ -38,95 +38,6 @@
 	#define ISOK Ok
 #endif
 
-typedef struct TAGFRAMESIMPLE{
-	wxString skinFile;
-	wxString guibuilderFile;
-
-	wxRect closebox;
-	wxString skin_closebox;
-	wxString skin_closebox_over;
-	wxString skin_closebox_press;
-
-	wxRect maximizebox;
-	wxString skin_maximizebox;
-	wxString skin_maximizebox_over;
-	wxString skin_maximizebox_press;
-
-	wxRect minimizebox;
-	wxString skin_minimizebox;
-	wxString skin_minimizebox_over;
-	wxString skin_minimizebox_press;
-
-	wxRect titlebar;
-	wxRect clientarea;
-	int titleposition;
-	wxFont font;
-	bool movable;
-}SimpleFrameInfo;
-WX_DECLARE_STRING_HASH_MAP( SimpleFrameInfo, MapOfSimpleFrames );
-
-typedef struct TAGFRAMECOMPLEX{
-	
-	wxString guibuilderFile;
-
-	wxString skin_top;
-	wxString skin_topleft;
-	wxString skin_topright;
-
-	wxString skin_bottom;
-	wxString skin_bottomleft;
-	wxString skin_bottomright;
-
-	wxString skin_left;
-	wxString skin_right;
-
-	wxString skin_body;
-
-	wxRect closebox;
-	int closebox_relateto;
-	wxString skin_closebox;
-	wxString skin_closebox_over;
-	wxString skin_closebox_press;
-
-	wxRect maximizebox;
-	wxString skin_maximizebox;
-	wxString skin_maximizebox_over;
-	wxString skin_maximizebox_press;
-
-	wxRect minimizebox;
-	int minimizebox_relateto;
-	wxString skin_minimizebox;
-	wxString skin_minimizebox_over;
-	wxString skin_minimizebox_press;
-
-	//wxRect titlebar;
-	int titlebarheight;
-	int titleposition;
-	wxFont font;
-	bool movable;
-}ComplexFrameInfo;
-WX_DECLARE_STRING_HASH_MAP( ComplexFrameInfo, MapOfComplexFrames );
-
-typedef struct TAGCONTROL{
-	int type;
-	bool shown;
-	wxRect measure;
-	wxString skinState1;
-	wxString skinState2;
-	wxString skinOver;
-	wxString skinDisabled;
-	wxString skinExtra;
-}ControlInfo;
-WX_DECLARE_STRING_HASH_MAP( ControlInfo, MapOfControls );
-
-typedef struct TAGCUSTOMWIDGET
-{	wxRect measure;
-	bool shown;
-}CustomWidgetInfo;
-
-WX_DECLARE_STRING_HASH_MAP( CustomWidgetInfo, MapOfWidgets );
-
-WX_DECLARE_STRING_HASH_MAP( wxWindow*, MapOfAssignments );
 
 ///A class for loading, parsing and assigning skins
 /**wxSkinEngine loads and parses skin files in the wxSkin XML format. It also maintains assocciations between
@@ -248,10 +159,11 @@ public:
 		}
 		return wxImage(300,300);
 	}
+	
+	wxImage LoadSkinImage(const wxString& file);
 private:
 	wxSkinEngine();
 
-	wxImage LoadSkinImage(const wxString& file);
 	void ParseInnerAttributes(int type,wxXmlNode* node);
 	void ParseSimpleFrameAttributes(wxXmlNode* node);
 	void ParseFrameAttributes(wxXmlNode* node);

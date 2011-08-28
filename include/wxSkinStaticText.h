@@ -32,11 +32,11 @@ public:
 	
 	wxSkinStaticText(wxWindow* parent,
  				int id,
-				const wxString& label = "",
+				const wxString& label = wxT(""),
   				const wxPoint& pos = wxDefaultPosition,
          		const wxSize& size = wxDefaultSize,
            		long style = wxNO_BORDER,
-				const wxString& name = "wxSkinStaticText");
+				const wxString& name = wxT("wxSkinStaticText"));
 	
  	~wxSkinStaticText();
 
@@ -44,6 +44,7 @@ public:
 	void SetLabel(const wxString& label);
 		
 	virtual void DrawCustom(wxDC& dc);
+	virtual void SetCustomSkin(const ControlInfo* info);
 protected:
 	void CreateLabel();
 
@@ -53,6 +54,7 @@ private:
 		
 	DECLARE_DYNAMIC_CLASS(wxSkinStaticText);
 };
+
 #else
 //#warning wxSkinStaticText only needed on MSW. In other ports it defaults to wxStaticText.
 class wxSkinStaticText : public wxStaticText
@@ -71,6 +73,16 @@ public:
 	{}
 	
 	~wxSkinStaticText(){}
+	void SetSkin(const ControlInfo* controlInfo)
+	{
+		StaticTextControlInfo *info = (StaticTextControlInfo*)controlInfo;
+	
+	    this->SetSize(info->measure);
+	    this->Show(info->shown);
+        this->SetFont(wxFont(info->fontSize, info->fontFamily, info->style, info->weight, info->underlined, info->faceName));
+	    this->SetForegroundColour(info->colour);
+
+	}
 private:
 	DECLARE_DYNAMIC_CLASS(wxSkinStaticText);
 };

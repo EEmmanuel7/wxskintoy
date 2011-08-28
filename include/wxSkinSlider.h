@@ -19,6 +19,9 @@
 
 #include <wx/image.h>
 #include <wxSkinWindow.h>
+#include <wxSkinEngine.h>
+
+
 ///Implements a simple Slider control. When being dragged it emits a wxEVT_COMMAND_SLIDER_UPDATED. Currently on horizontal.
 class wxSkinSlider : public wxSkinWindow
 {
@@ -28,12 +31,12 @@ private:
 	int m_currentvalue;
 	wxRect m_sliderRect;
 	bool m_bOver;
+	wxImage bmp_fill_orign;
 public:
 	wxSkinSlider();
 
 	wxSkinSlider(wxWindow* parent,
  				int id,
- 				bool type = false,
  				int max=100,
   				const wxPoint& pos = wxDefaultPosition,
          		const wxSize& size = wxDefaultSize,
@@ -57,7 +60,9 @@ public:
 	void SetType(bool type);
 	
 	virtual void DrawCustom(wxDC& dc);
+	virtual void SetCustomSkin(const ControlInfo* info);
 private:
+    void OnLeftDown(wxMouseEvent& event);
 	void OnMouseMotion(wxMouseEvent& event);
 	void OnEnterWindowDummy(wxMouseEvent& WXUNUSED(e)){}
 	void OnLeaveWindow(wxMouseEvent& e)

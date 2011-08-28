@@ -50,6 +50,7 @@ public:
 	void SetValue(int);
 	
 	virtual void DrawCustom(wxDC& dc);
+	virtual void SetCustomSkin(const ControlInfo* info){}
 private:
 	DECLARE_DYNAMIC_CLASS(wxSkinGauge)
 	DECLARE_EVENT_TABLE()
