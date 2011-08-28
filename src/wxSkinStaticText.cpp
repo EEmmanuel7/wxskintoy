@@ -29,7 +29,7 @@ wxSkinStaticText::wxSkinStaticText(wxWindow* parent,
          		const wxSize& size,
            		long style,
 				const wxString& name)
-	:wxSkinWindow(parent,id,pos,size,style,name,TYPE_TEXT)
+	:wxSkinWindow(parent,id,pos,size,style,name,TYPE_STATICTEXT)
 {
 
    	SetLabel(label);
@@ -74,7 +74,6 @@ void wxSkinStaticText::CreateLabel()
 	dc.SelectObject(wxNullBitmap);
 
 	bmp_normal = bmp.ConvertToImage();
-
 	wxColour col = wxSkinEngine::Get()->GetTransparencyColour();
 	bmp_normal.SetMaskColour(col.Red(),col.Green(),col.Blue());
 
@@ -85,6 +84,14 @@ void wxSkinStaticText::CreateLabel()
 void wxSkinStaticText::DrawCustom(wxDC& dc)
 {	
 }
+void wxSkinStaticText::SetCustomSkin(const ControlInfo* controlInfo)
+{
+	StaticTextControlInfo *info = (StaticTextControlInfo*)controlInfo;
+
+    this->SetFont(wxFont(info->fontSize, info->fontFamily, info->style, info->weight, info->underlined, info->faceName));
+    this->SetForegroundColour(info->colour);
+}
+
 #else
 	IMPLEMENT_DYNAMIC_CLASS(wxSkinStaticText,wxStaticText)
 #endif

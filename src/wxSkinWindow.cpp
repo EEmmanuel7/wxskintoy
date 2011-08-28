@@ -18,7 +18,6 @@
 
 #include <wx/dcbuffer.h>
 
-
 BEGIN_EVENT_TABLE(wxSkinWindow,wxWindow)
 	EVT_ERASE_BACKGROUND(wxSkinWindow::OnErase)
 	EVT_PAINT(wxSkinWindow::OnPaint)
@@ -28,6 +27,7 @@ BEGIN_EVENT_TABLE(wxSkinWindow,wxWindow)
 END_EVENT_TABLE()
 
 IMPLEMENT_ABSTRACT_CLASS(wxSkinWindow,wxWindow);
+
 
 wxSkinWindow::wxSkinWindow(wxWindow* parent,
 				wxWindowID id,
@@ -43,6 +43,30 @@ wxSkinWindow::wxSkinWindow(wxWindow* parent,
 	m_type = type;
 	wxSkinEngine::Get()->GetDefaultSkin(this);
 }
+
+void wxSkinWindow::SetSkin(const ControlInfo* info)
+{
+    if (info)
+    {
+	    this->SetNormalSkin(wxSkinEngine::Get()->LoadSkinImage(info->skinState1));
+	    this->SetState2Skin(wxSkinEngine::Get()->LoadSkinImage(info->skinState2));
+	    this->SetOverSkin(wxSkinEngine::Get()->LoadSkinImage(info->skinOver));
+	    this->SetDisabledSkin(wxSkinEngine::Get()->LoadSkinImage(info->skinDisabled));
+
+	    this->SetSize(info->measure);
+	    this->Show(info->shown);
+
+	    SetCustomSkin(info);
+	}
+	else
+	{
+	    this->SetDisabledSkin(wxNullImage);
+		this->SetState2Skin(wxNullImage);
+		this->SetOverSkin(wxNullImage);
+		this->SetNormalSkin(wxImage(1,1));
+	}
+}
+
 void wxSkinWindow::SetNormalSkin(const wxImage& skin)
 { 
 	bmp_normal = skin; 
@@ -58,10 +82,6 @@ void wxSkinWindow::SetOverSkin(const wxImage& skin)
 void wxSkinWindow::SetDisabledSkin(const wxImage& skin)
 { 
 	bmp_disabled = skin; 
-}
-void wxSkinWindow::SetExtraSkin(const wxImage& skin)
-{
-    bmp_extra = skin;
 }
 bool wxSkinWindow::SetShape(const wxImage& imgorg)
 {
