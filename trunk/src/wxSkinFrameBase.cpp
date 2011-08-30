@@ -331,6 +331,7 @@ void wxSkinFrameBase::OnMouseMove(wxMouseEvent& evt)
 		if(rectWN.CONTAINS(msps) || rectES.CONTAINS(msps))
 		{	
 		    CaptureMouse();
+
 			SetCursor(wxCursor(wxCURSOR_SIZENWSE ));
 		}
 		else if(rectEN.CONTAINS(msps) || rectWS.CONTAINS(msps))
