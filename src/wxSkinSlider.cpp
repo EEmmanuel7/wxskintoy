@@ -61,7 +61,6 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 
 	if(bmp_state2.ISOK())
 	{
-	    wxImage bmp_fill(bmp_fill_orign);
 		//if(bmp_state2.Ok())
 		//{
 			m_sliderRect.width = bmp_state2.GetWidth();
@@ -73,7 +72,7 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 		
 		int scale;
 		if (m_isvertical)
-		{printf("ok\n");
+		{
 		    scale = (int)(((float)h/(float)m_maxvalue)*m_currentvalue);
 		    int maxScale = h-bmp_state2.GetHeight();
 		    if(scale > maxScale)
@@ -81,14 +80,14 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 		    m_sliderRect.y = scale;
 
 		    if(m_bOver)
-			    dc.DrawBitmap( bmp_over, 0, scale, true);
+			    dc.DrawBitmap( bmp_over, (w - bmp_over.GetWidth()) / 2, scale, true);
 		    else
-			    dc.DrawBitmap( bmp_state2, 0, scale, true);
-			if (bmp_fill_orign.ISOK())
+			    dc.DrawBitmap( bmp_state2, (w - bmp_state2.GetWidth()) / 2, scale, true);
+			if (bmp_fill.ISOK())
 			{
-			    int fill_w = bmp_fill_orign.GetWidth();
+			    int fill_w = bmp_fill.GetWidth();
 			    int offset = (w - fill_w) / 2;
-	            dc.DrawBitmap(bmp_fill.Resize(wxSize(fill_w, scale), wxPoint(0, 0)), offset, 0, true);
+	            dc.DrawBitmap(bmp_fill.GetSubImage(wxRect(0, 0, fill_w, scale)), offset, 0, true);
 	        }
 		}
 		else
@@ -100,14 +99,14 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 		    m_sliderRect.x = scale;
 
 		    if(m_bOver)
-			    dc.DrawBitmap( bmp_over, scale , 0, true);
+			    dc.DrawBitmap( bmp_over, scale , (h - bmp_over.GetHeight()) / 2, true);
 		    else
-			    dc.DrawBitmap( bmp_state2, scale , 0, true);
-			if (bmp_fill_orign.ISOK())
+			    dc.DrawBitmap( bmp_state2, scale , (h - bmp_state2.GetHeight()) / 2, true);
+			if (bmp_fill.ISOK())
 			{
-			    int fill_h = bmp_fill_orign.GetHeight();
+			    int fill_h = bmp_fill.GetHeight();
 			    int offset = (h - fill_h) / 2;
-	            dc.DrawBitmap(bmp_fill.Resize(wxSize(scale, fill_h), wxPoint(0, 0)), 0, offset, true);
+	            dc.DrawBitmap(bmp_fill.GetSubImage(wxRect(0, 0, scale, fill_h)), 0, offset, true);
 	        }
 		}
 	}
@@ -116,7 +115,7 @@ void wxSkinSlider::DrawCustom(wxDC& dc)
 
 void wxSkinSlider::SetCustomSkin(const ControlInfo* info)
 {
-    bmp_fill_orign = wxSkinEngine::Get()->LoadSkinImage(((SliderControlInfo*)info)->skinFill);
+    bmp_fill = wxSkinEngine::Get()->LoadSkinImage(((SliderControlInfo*)info)->skinFill);
     m_isvertical = ((SliderControlInfo*)info)->isVertical;
 }
 
